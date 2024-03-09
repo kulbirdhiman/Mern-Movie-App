@@ -1,19 +1,27 @@
-import express from 'express';
-import dotenv from 'dotenv'
+// Packages
+import express from "express";
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
+import path from "path";
 
-import connectDb from './config/connectDb.js';
-import cookieParser from 'cookie-parser';
+// Files
+import connectDB from "./config/db.js";
+import userRoutes from "./routes/userRoutes.js";
 
+// Configuration
+dotenv.config();
+connectDB();
 
 const app = express();
-const port = process.env.PORT || 5000;
-const url = process.env.DATA_BASE_URL || "mongodb://localhost:27017/Movie-App";
-dotenv.config();
-connectDb(url)
 
+// middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-// Routes
 
-app.listen(port, () => console.log("server up"))
+const PORT = 3000;
+
+// Routes
+app.use("/api/users", userRoutes);
+
+app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
