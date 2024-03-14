@@ -8,8 +8,8 @@ import { MdOutlineLocalMovies } from "react-icons/md";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {useLogoutMutation} from '../../redux/api/userApi'
-import { logout } from "../../redux/feature/auth/authSlice";
+import { useLogoutMutation } from "../../redux/api/users";
+import { logout } from "../../redux/features/auth/authSlice";
 
 const Navigation = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -22,8 +22,8 @@ const Navigation = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const {logoutApiCall} = useLogoutMutation();
-  
+  const [logoutApiCall] = useLogoutMutation();
+
   const logoutHandler = async () => {
     try {
       await logoutApiCall().unwrap();

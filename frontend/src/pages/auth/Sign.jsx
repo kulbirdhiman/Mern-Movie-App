@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Loader from "../../component/Loader";
-import { setCredentials } from "../../redux/features/auth/authSlice";
-import { useRegisterMutation } from "../../redux/api/users";
+import Loader from "../../components/Loader";
+import { setcreadtionls } from "../../redux/feature/auth/authSlice";
+import { useRegisterMutation } from "../../redux/api/userApi";
 import { toast } from "react-toastify";
 
 const Sign = () => {
@@ -37,7 +37,7 @@ const Sign = () => {
     } else {
       try {
         const res = await register({ username, email, password }).unwrap();
-        dispatch(setCredentials({ ...res }));
+        dispatch(setcreadtionls({ ...res }));
         navigate(redirect);
         toast.success("User successfully registered.");
       } catch (err) {
