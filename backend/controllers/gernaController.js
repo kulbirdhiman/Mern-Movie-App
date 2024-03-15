@@ -4,63 +4,65 @@ import expressAsyncHandler from 'express-async-handler';
 const createGerna = expressAsyncHandler(async (req, res) => {
     try {
         const { name } = req.body;
-        const isExit = await Genra.find(name);
-        if (isExit) {
-            res.status(401).send('This name already exists');
+        const existingGenre = await Genra.findOne({ name });
+        if (existingGenre) {
+            return res.status(400).send('This name already exists');
         }
-        const newgenra = new Genra(name);
-        await newgenra.save();
-        res.json(newgenra)
+        const newGenre = new Genra({ name });
+        await newGenre.save();
+        res.status(201).json(newGenre);
     } catch (error) {
-        res.status(404).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
 });
+
 const updateGenra = expressAsyncHandler(async (req, res) => {
     try {
         const { name } = req.body;
         const { id } = req.params;
-        const genra = await Genra.findByIdAndUpdate(id)
-        if (!genra) {
-            res.status(404).json({ message: "Cannot find the genre with the given id." });
+        const genre = await Genra.findByIdAndUpdate(id, { name }, { new: true });
+        if (!genre) {
+            return res.status(404).json({ message: "Cannot find the genre with the given id." });
         }
-        genra.name = name;
-        const updatedGenra = await genra.save();
-        res.json(updatedGenra);
+        res.json(genre);
     } catch (error) {
-        res.status(404).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
 });
+
 const deleteGenra = expressAsyncHandler(async (req, res) => {
     try {
         const { id } = req.params;
-        const deletedgerna = await Genra.remove({ _id: id });
-        if (!deletedgerna) {
-            res.status(401).json({ message: "No record found for this Id!" });
+        const deletedGenre = await Genra.findByIdAndDelete(id);
+        if (!deletedGenre) {
+            return res.status(404).json({ message: "No record found for this Id!" });
         }
-        res.status(200).json(deletedgerna);
-        res.json(deletedgerna)
+        res.status(200).json(deletedGenre);
     } catch (error) {
-        res.status(404).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
 });
+
 const getAllGenras = expressAsyncHandler(async (req, res) => {
     try {
-        const allGerna = await Genra.find();
-        res.status(200).json(allGerna);
+        const allGenres = await Genra.find();
+        res.status(200).json(allGenres);
     } catch (error) {
-        res.status(404).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
 });
+
 const readGerna = expressAsyncHandler(async (req, res) => {
     try {
         const { id } = req.params;
-        const gerna = await Genra.findById(id);
-        if (!gerna) {
-            res.status(401).json({ message: "genra not founded" });
+        const genre = await Genra.findById(id);
+        if (!genre) {
+            return res.status(404).json({ message: "Genre not found" });
         }
-        res.json(gerna)
+        res.json(genre);
     } catch (error) {
-        res.status(404).json({ message: error.message })
+        res.status(500).json({ message: error.message });
     }
 });
+
 export { createGerna, updateGenra, deleteGenra, getAllGenras, readGerna };
